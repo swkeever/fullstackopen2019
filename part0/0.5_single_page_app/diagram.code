@@ -1,0 +1,18 @@
+note over browser:
+assume the /spa page is already loaded
+end note
+
+note over browser:
+user fills out the form with a new note and presses the Save button
+end note
+
+note over browser:
+pushes new note to the list of in-memory notes, then
+redraws the updates list of notes to the page
+end note
+
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+
+note over server:
+responds with status 201 to inform that the new note was created
+end note

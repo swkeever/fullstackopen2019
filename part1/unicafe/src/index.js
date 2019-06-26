@@ -39,10 +39,8 @@ const Button = ({ text, value, setValue }) => {
 };
 
 const Feedback = ({ good, neutral, bad }) => {
-
   return (
     <h2>give feedback</h2>
-
   );
 };
 

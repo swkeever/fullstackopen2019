@@ -2,12 +2,9 @@ import React from 'react';
 import LanguageList from './LanguageList';
 import CountryFlag from './CountryFlag';
 import WeatherReport from './WeatherReport'
+import GoBackButton from './GoBackButton';
 
-const SingleCountryInfo = ({ country, showCountry = true }) => {
-  if (!showCountry) {
-    return null;
-  }
-
+const SingleCountryInfo = ({ country, countries, setSelection }) => {
   return (
     <div>
       <h2>{country.name}</h2>
@@ -17,6 +14,10 @@ const SingleCountryInfo = ({ country, showCountry = true }) => {
       <LanguageList languages={country.languages} />
       <CountryFlag country={country} />
       <WeatherReport city={country.capital} />
+      <GoBackButton 
+        countries={countries}
+        setSelection={setSelection} 
+      />
     </div>
   );
 };

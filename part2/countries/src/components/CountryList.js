@@ -1,14 +1,17 @@
 import React from 'react';
-import CountryButton from './CountryButton';
 
-const CountryList = ({ countries }) => {
+const CountryList = ({ countries, setSelection }) => {
+  const handleClick = (selection) => {
+    setSelection(selection);
+  }
+
   return (
     <ul>
       {
-        countries.map(country => {
+        countries.map((country, i) => {
           return (
               <li key={country.numericCode}>{country.name}
-              <CountryButton country={country} />
+                <button onClick={() => handleClick(i)}>show</button>
               </li>
           )
 

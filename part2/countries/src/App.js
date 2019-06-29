@@ -7,6 +7,7 @@ import axios from 'axios';
 const App = () => {
   const [filter, setFilter] = useState('');
   const [countries, setCountries] = useState([]);
+  const [selection, setSelection] = useState(-1);
 
   useEffect(() => {
     const allCountries = 'https://restcountries.eu/rest/v2/all';
@@ -24,6 +25,11 @@ const App = () => {
 
   const handleChange = (e) => {
     setFilter(e.target.value.toLowerCase());
+    setSelection(-1);
+  }
+
+  if (selection < 0 && filteredCountries.length === 1) {
+    setSelection(0);
   }
 
   return (
@@ -33,7 +39,11 @@ const App = () => {
         setFilter={setFilter} 
         handleChange={handleChange}
       />
-      <Display countries={filteredCountries} />
+      <Display 
+        countries={filteredCountries} 
+        selection={selection} 
+        setSelection={setSelection}
+      />
     </div>
   );
 };

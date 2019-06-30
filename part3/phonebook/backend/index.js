@@ -3,10 +3,21 @@ const app = express();
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
+
 morgan.token('data', (req, res) => JSON.stringify(req.body));
 
 app.use(bodyParser.json());
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'));
+
+const requestLogger = (request, response, next) => {
+  console.log('Method:', request.method)
+  console.log('Path:  ', request.path)
+  console.log('Body:  ', request.body)
+  console.log('---')
+  next()
+};
+
+app.use(requestLogger);
 
 const apiPersons = '/api/persons';
 
@@ -69,7 +80,7 @@ app.post(apiPersons, (req, res) => {
     });
   }
 
-  if (persons.find(p => p.name)) {
+  if (persons.find(p => p.name === body.name)) {
     return res.status(400).json({
       error: 'name already exists in the phonebook'
     });
@@ -96,7 +107,7 @@ const unknownEndpoint = (req, res) => {
 
 app.use(unknownEndpoint);
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 })

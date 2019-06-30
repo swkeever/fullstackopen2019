@@ -12,7 +12,7 @@ const Persons = ({ persons, handleDelete, filter }) => {
   const numbers = () => filteredNumbers.map(person => {
     return (
       <Person
-        key={person.name}
+        key={person.id}
         person={person}
         handleDelete={handleDelete}
       />

@@ -96,10 +96,10 @@ const App = () => {
           setPersons(persons.map(p => (p.id === foundPerson.id) ? res : p));
         })
         .catch(err => {
-          console.log(err);
+          console.log(err.response.data);
 
           const newNotification = {
-            message: `Error when trying to update ${updatePerson} contact info`,
+            message: `Error: ${err.response.data}`,
             class: 'error'
           }
 
@@ -124,10 +124,10 @@ const App = () => {
           setPersons(persons.concat(newPerson));
         })
         .catch(err => {
-          console.log(err);
+          const errMessage = err.response.data.error;
 
           const newNotification = {
-            message: `Error occurred while adding ${newPerson.name}`,
+            message: `Error: ${errMessage}`,
             class: "error"
           }
 

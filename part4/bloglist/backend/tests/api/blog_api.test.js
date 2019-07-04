@@ -1,14 +1,17 @@
 /* eslint-disable no-underscore-dangle */
 const mongoose = require('mongoose');
 const supertest = require('supertest');
-const app = require('../app');
+const app = require('../../app');
 
 const api = supertest(app);
-const Blog = require('../models/blog');
-const blogs = require('./mock/blogs');
-const testHelper = require('./test_helper');
+const Blog = require('../../models/blog');
+const blogs = require('../mock/blogs');
+const testHelper = require('../test_helper');
 
 beforeEach(async () => {
+  await testHelper.setupUserDB();
+  await testHelper.loginAsRoot();
+
   await Blog.deleteMany({});
 
   const blogObjects = blogs
@@ -59,16 +62,22 @@ describe('POST route', () => {
       await api
         .post('/api/blogs')
         .send(newBlog)
+        .set('Authorization', testHelper.getToken())
         .expect(201)
         .expect('Content-Type', /application\/json/);
     });
 
     test('database contains new blog', async () => {
-      await api.post('/api/blogs').send(newBlog);
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .set('Authorization', testHelper.getToken());
+
       const blogsInDB = await testHelper.blogsInDB();
       expect(blogsInDB.length).toBe(blogs.length + 1);
-      const blogsWithoutIds = testHelper.removeIds(blogsInDB);
-      expect(blogsWithoutIds).toContainEqual(newBlog);
+
+      const titles = blogsInDB.map(blog => blog.title);
+      expect(titles).toContainEqual(newBlog.title);
     });
 
     test('blog without likes defaults to 0', async () => {
@@ -78,17 +87,16 @@ describe('POST route', () => {
         url: 'https://www.myspace.com/myblog',
       };
 
-      await api.post('/api/blogs').send(blogWithoutLikes);
+      await api
+        .post('/api/blogs')
+        .send(blogWithoutLikes)
+        .set('Authorization', testHelper.getToken());
 
       const blogsInDB = await testHelper.blogsInDB();
-      const expected = {
-        ...blogWithoutLikes,
-        likes: 0,
-      };
 
-      const blogsWithoutIds = testHelper.removeIds(blogsInDB);
+      const likes = blogsInDB.map(blog => blog.likes);
 
-      expect(blogsWithoutIds).toContainEqual(expected);
+      expect(likes).toContain(0);
     });
   });
 
@@ -103,6 +111,7 @@ describe('POST route', () => {
       await api
         .post('/api/blogs')
         .send(badBlog)
+        .set('Authorization', testHelper.getToken())
         .expect(400);
     });
 
@@ -116,6 +125,7 @@ describe('POST route', () => {
       await api
         .post('/api/blogs')
         .send(badBlog)
+        .set('Authorization', testHelper.getToken())
         .expect(400);
     });
   });
@@ -127,6 +137,7 @@ describe('POST route', () => {
 
       await api
         .delete(`/api/blogs/${selectedBlog.id}`)
+        .set('Authorization', testHelper.getToken())
         .expect(200);
 
       blogsInDB = await testHelper.blogsInDB();
@@ -149,6 +160,7 @@ describe('POST route', () => {
       await api
         .put(`/api/blogs/${blog.id}`)
         .send(blog)
+        .set('Authorization', testHelper.getToken())
         .expect(200);
 
       blogsInDB = await testHelper.blogsInDB();

@@ -20,6 +20,13 @@ beforeEach(async () => {
   await Promise.all(promiseArray);
 });
 
+const newBlog = {
+  title: 'hello world',
+  author: 'sally anne',
+  url: 'https://www.blogger.com/myblog',
+  likes: 3,
+};
+
 describe('GET route', () => {
   test('able to get notes in correct format', async () => {
     await api
@@ -51,13 +58,6 @@ describe('GET route', () => {
 
 describe('POST route', () => {
   describe('successful requests', () => {
-    const newBlog = {
-      title: 'hello world',
-      author: 'sally anne',
-      url: 'https://www.blogger.com/myblog',
-      likes: 3,
-    };
-
     test('returns correct header info', async () => {
       await api
         .post('/api/blogs')
@@ -132,18 +132,44 @@ describe('POST route', () => {
 
   describe('delete requests', () => {
     test('able to delete blog', async () => {
-      let blogsInDB = await testHelper.blogsInDB();
-      const selectedBlog = blogsInDB[0];
+      const response = await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .set('Authorization', testHelper.getToken())
+        .expect(201);
+
+      const { id } = response.body;
+      const blogsAtStart = await testHelper.blogsInDB();
+
+      expect(blogsAtStart.length).toBe(blogs.length + 1);
 
       await api
-        .delete(`/api/blogs/${selectedBlog.id}`)
+        .delete(`/api/blogs/${id}`)
         .set('Authorization', testHelper.getToken())
         .expect(200);
 
-      blogsInDB = await testHelper.blogsInDB();
+      const blogsAtEnd = await testHelper.blogsInDB();
 
-      expect(blogsInDB.length).toBe(blogs.length - 1);
-      expect(blogsInDB).not.toContainEqual(selectedBlog);
+      expect(blogsAtEnd.length).toBe(blogs.length);
+
+      const titles = blogsAtEnd.map(blog => blog.title);
+      expect(titles).not.toContain(newBlog.title);
+    });
+
+
+    test('not able to delete blog that does not belong to you', async () => {
+      const blogsAtStart = await testHelper.blogsInDB();
+      const blog = blogsAtStart[0];
+
+      await api
+        .delete(`/api/blogs/${blog.id}`)
+        .send(blog)
+        .set('Authorization', testHelper.getToken())
+        .expect(401);
+
+      const blogsAtEnd = await testHelper.blogsInDB();
+
+      expect(blogsAtStart.length).toBe(blogsAtEnd.length);
     });
   });
 

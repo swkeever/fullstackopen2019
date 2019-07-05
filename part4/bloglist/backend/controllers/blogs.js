@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const blogsRouter = require('express').Router();
 const jwt = require('jsonwebtoken');
 const Blog = require('../models/blog');
@@ -26,9 +27,10 @@ blogsRouter.post('/', async (request, response, next) => {
     const decodedToken = jwt.verify(request.token, process.env.SECRET);
 
     if (!request.token || !decodedToken.id) {
-      return response
+      response
         .status(401)
         .json({ error: 'token missing or invalid' });
+      return;
     }
 
     const user = await User.findById(decodedToken.id);
@@ -77,13 +79,14 @@ blogsRouter.delete('/:id', async (request, response, next) => {
     const decodedToken = jwt.verify(request.token, process.env.SECRET);
 
     if (!request.token || !decodedToken.id || blogUserId !== decodedToken.id.toString()) {
-      return response
+      response
         .status(401)
         .send({ error: 'token missing or invalid' });
+      return;
     }
 
     await Blog.findByIdAndRemove(request.params.id);
-    
+
     response
       .status(200)
       .end();

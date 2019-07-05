@@ -1,6 +1,5 @@
+/* eslint-disable no-underscore-dangle */
 const _ = require('lodash');
-
-const dummy = blogs => 1;
 
 const totalLikes = (blogs) => {
   const reducer = (acc, cur) => acc + cur.likes;
@@ -56,7 +55,6 @@ const mostLikes = (blogs) => {
 };
 
 module.exports = {
-  dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,

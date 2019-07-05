@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './Blog';
 import blogsService from '../services/blogs';
-import tokenService from '../services/token';
+import tokenService from '../utils/token';
+import Logout from './Logout';
+import CreateBlog from './CreateBlog';
+import Togglable from './Togglable';
 
 const Blogs = ({
-  user, setUser
+  user, setUser,
+  setNotification,
 }) => {
   const [blogs, setBlogs] = useState([]);
+  const [clicked, setClicked] = useState([]);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -16,25 +21,19 @@ const Blogs = ({
     fetchBlogs();
   }, []);
 
-
   const showBlogs = () => {
-    console.log('showBlogs:', blogs);
-    return blogs.map(blog => (
+    console.log(clicked)
+    const blogsDisplay = blogs.map((blog, index) => (
       <Blog
+        key={blog.id}
         blog={blog}
+        clicked={clicked}
+        setClicked={setClicked}
+        indexOf={index}
       />
     ));
-  }
 
-  const showLogout = () => {
-    const logout = () => {
-      tokenService.setToken(null);
-      setUser(null);
-    }
-
-    return (
-      <button type="button" onClick={logout}>Logout</button>
-    )
+    return blogsDisplay;
   }
 
   return (
@@ -42,9 +41,11 @@ const Blogs = ({
       <h2>Blogs</h2>
       <p>
         {user.name} logged in
+        <Logout
+          setUser={setUser}
+        />
       </p>
       {showBlogs()}
-      <p>{showLogout()}</p>
     </div>
   );
 }

@@ -1,19 +1,16 @@
 import React from 'react';
 import loginService from '../services/login';
-import tokenService from '../services/token';
-import notificationService from '../services/notification.js';
+import tokenService from '../utils/token';
+import localStorageService from '../utils/local_storage';
+import formHelper from '../utils/form_helper';
+import notificationHelper from '../utils/notification';
 
 const Login = ({
   username, setUsername,
   password, setPassword,
-  setUser,
+  setUser, 
+  setNotification,
 }) => {
-  const showLoginFailed = () => {
-    return (
-      <p>Login failed</p>
-    )
-  }
-
   const userLogin = async (e) => {
     e.preventDefault();
 
@@ -21,16 +18,16 @@ const Login = ({
 
     try {
       const user = await loginService.login(credentials);
-      window.localStorage.setItem('logged-blog-app-user', JSON.stringify(user));
+      localStorageService.setLocalStorage(user);
       tokenService.setToken(user.token);
+      
+      const loginSuccess = notificationHelper.createNotification(`Logged in as ${user.name}`, notificationHelper.SUCCESS);
+      notificationHelper.setNotification(loginSuccess, setNotification);
       setUser(user);
     } catch (exception) {
-      // TODO: show error message to user
+      const loginFailed = notificationHelper.createNotification('Logged in failed', notificationHelper.ERROR);
+      notificationHelper.setNotification(loginFailed, setNotification);
     }
-  }
-
-  const handleChange = (value, setValue) => {
-    setValue(value);
   }
 
   return (
@@ -41,7 +38,7 @@ const Login = ({
           <label htmlFor="username">
             <input
               type="text"
-              onChange={({ target }) => handleChange(target.value, setUsername)}
+              onChange={({ target }) => formHelper.handleChange(target.value, setUsername)}
               value={username}
               id="username"
               name="username"
@@ -52,7 +49,7 @@ const Login = ({
           <label htmlFor="password">
             <input
               type="password"
-              onChange={({ target }) => handleChange(target.value, setPassword)}
+              onChange={({ target }) => formHelper.handleChange(target.value, setPassword)}
               value={password}
               id="password"
               name="username"

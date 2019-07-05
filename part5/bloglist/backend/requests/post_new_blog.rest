@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN3ayIsImlkIjoiNWQxZTQ5YTgwYzBkNzY1NDE5YjIzZmVhIiwiaWF0IjoxNTYyMjgyMTA4fQ.Ms6ySD276iGES51RLqeMdwF9pSxw1eGAxIoCRbkTo4k
+
+{
+  "title": "Amazing Blog!",
+  "author": "Johnny Joe",
+  "url": "https://www.myblog.com/blogs/454545",
+  "likes": 3
+}

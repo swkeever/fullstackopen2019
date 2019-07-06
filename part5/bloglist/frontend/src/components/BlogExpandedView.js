@@ -40,7 +40,7 @@ const BlogExpandedView = ({
       <div>
         <a href={blog.url}>{blog.url}</a>
       </div>
-      <div>
+      <div className="likes">
         {blog.likes}
         {' '}
 likes

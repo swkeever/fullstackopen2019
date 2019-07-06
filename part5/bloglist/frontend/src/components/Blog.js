@@ -16,7 +16,7 @@ const Blog = ({ blog, setNotification }) => {
   };
 
   return (
-    <div style={blogStyle}>
+    <div className="blog" style={blogStyle}>
       {
         clicked
           ? (

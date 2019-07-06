@@ -17,6 +17,7 @@ const BlogLimitedView = ({ blog, clicked, setClicked }) => {
 
   return (
     <div
+      className="blog-title-and-author"
       role="button"
       onKeyDown={handleKeyDown}
       tabIndex={0}

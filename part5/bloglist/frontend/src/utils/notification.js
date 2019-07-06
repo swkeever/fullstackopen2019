@@ -13,7 +13,7 @@ const changeNotification = (notification, setNotification) => {
   const newNotification = {
     ...notification,
     class: className,
-  }
+  };
 
   setNotification(newNotification);
   setTimeout(() => {

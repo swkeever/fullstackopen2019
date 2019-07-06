@@ -5,17 +5,17 @@ import '@testing-library/react/cleanup-after-each';
 jest.mock('./services/blogs');
 
 /* Sets up local browser storage mock */
-let savedItems = {}
+let savedItems = {};
 
 const localStorageMock = {
   setItem: (key, item) => {
-    savedItems[key] = item
+    savedItems[key] = item;
   },
-  getItem: (key) => savedItems[key],
-  clear: savedItems = {}
-}
+  getItem: key => savedItems[key],
+  clear: savedItems = {},
+};
 
-Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
 /* Silences erroneous error */
 const originalError = console.error;

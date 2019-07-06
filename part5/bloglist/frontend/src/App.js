@@ -7,8 +7,6 @@ import Notification from './components/Notification'; import Togglable from './c
 import CreateBlog from './components/CreateBlog';
 
 const App = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
   const [notification, setNotification] = useState({
     message: '',
@@ -28,10 +26,6 @@ const App = () => {
 
   const showNotLoggedInView = () => (
     <Login
-      username={username}
-      setUsername={setUsername}
-      password={password}
-      setPassword={setPassword}
       setUser={setUser}
       setNotification={setNotification}
     />

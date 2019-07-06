@@ -3,19 +3,28 @@ import PropTypes from 'prop-types';
 import loginService from '../services/login';
 import tokenService from '../utils/token';
 import localStorageService from '../utils/local_storage';
-import formHelper from '../utils/form_helper';
 import notificationHelper from '../utils/notification';
+import { useField } from '../hooks';
+import _ from 'lodash';
 
 const Login = ({
-  username, setUsername,
-  password, setPassword,
   setUser,
   setNotification,
 }) => {
+  const username = useField('text');
+  const password = useField('password');
+
+  const inputProps = ['value', 'type', 'onChange'];
+  const usernameProps = _.pick(username, inputProps);
+  const passwordProps = _.pick(password, inputProps);
+
   const userLogin = async (e) => {
     e.preventDefault();
 
-    const credentials = { username, password };
+    const credentials = { 
+      username: username.value, 
+      password: password.value,
+    };
 
     try {
       const user = await loginService.login(credentials);
@@ -38,9 +47,7 @@ const Login = ({
         <div>
           <label htmlFor="username">
             <input
-              type="text"
-              onChange={({ target }) => formHelper.handleChange(target.value, setUsername)}
-              value={username}
+              {...usernameProps}
               id="username"
               name="username"
             />
@@ -49,9 +56,7 @@ const Login = ({
         <div>
           <label htmlFor="password">
             <input
-              type="password"
-              onChange={({ target }) => formHelper.handleChange(target.value, setPassword)}
-              value={password}
+              {...passwordProps}
               id="password"
               name="username"
             />
@@ -68,10 +73,6 @@ const Login = ({
 };
 
 Login.propTypes = {
-  username: PropTypes.string.isRequired,
-  setUsername: PropTypes.func.isRequired,
-  password: PropTypes.string.isRequired,
-  setPassword: PropTypes.func.isRequired,
   setUser: PropTypes.func.isRequired,
   setNotification: PropTypes.func.isRequired,
 };

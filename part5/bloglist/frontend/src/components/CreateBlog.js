@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import formHelper from '../utils/form_helper';
 import blogsService from '../services/blogs';
 import notificationHelper from '../utils/notification';
+import { useField } from '../hooks';
+import _ from 'lodash';
 
 const CreateBlog = ({ setNotification }) => {
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
+  const title = useField('text');
+  const author = useField('text');
+  const url = useField('url');
+
+  const inputProps = ['value', 'type', 'onChange'];
+  const titleProps = _.pick(title, inputProps);
+  const authorProps = _.pick(author, inputProps);
+  const urlProps = _.pick(url, inputProps);
 
   const createBlog = async () => {
     const blog = {
-      title,
-      author,
-      url,
+      title: title.value,
+      author: author.value,
+      url: url.value,
     };
 
     try {
@@ -27,6 +33,18 @@ const CreateBlog = ({ setNotification }) => {
     }
   };
 
+  const resetForm = () => {
+    const asksToReset = window.confirm('Are you sure you want to cancel this blog post?');
+
+    if (!asksToReset) {
+      return;
+    }
+
+    title.reset();
+    author.reset();
+    url.reset();
+  };
+
   return (
     <div>
       <h2>Create Blog</h2>
@@ -34,11 +52,9 @@ const CreateBlog = ({ setNotification }) => {
         <label htmlFor="new-blog-title">
           Title:
           <input
-            type="text"
+            {...titleProps}
             id="new-blog-title"
             name="blog_title"
-            onChange={({ target }) => formHelper.handleChange(target.value, setTitle)}
-            value={title}
           />
         </label>
       </div>
@@ -46,11 +62,9 @@ const CreateBlog = ({ setNotification }) => {
         <label htmlFor="new-blog-author">
           Author:
           <input
-            type="text"
+            {...authorProps}
             id="new-blog-author"
             name="blog_author"
-            onChange={({ target }) => formHelper.handleChange(target.value, setAuthor)}
-            value={author}
           />
         </label>
       </div>
@@ -58,11 +72,9 @@ const CreateBlog = ({ setNotification }) => {
         <label htmlFor="new-blog-url">
           URL:
           <input
-            type="url"
+            {...urlProps}
             id="new-blog-url"
             name="blog_url"
-            onChange={({ target }) => formHelper.handleChange(target.value, setUrl)}
-            value={url}
           />
         </label>
       </div>
@@ -72,6 +84,12 @@ const CreateBlog = ({ setNotification }) => {
           onClick={createBlog}
         >
           Create
+        </button>
+        <button
+          type="button"
+          onClick={resetForm}
+        >
+          Reset
         </button>
       </div>
     </div>

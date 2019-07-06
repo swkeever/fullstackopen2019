@@ -1,8 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import BlogExpandedView from './BlogExpandedView';
 import BlogLimitedView from './BlogLimitedView';
+import propTypesHelper from '../utils/proptypes';
 
-const Blog = ({ blog, clicked, setClicked, indexOf }) => {
+const Blog = ({ blog, setNotification }) => {
+  const [clicked, setClicked] = useState(false);
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -11,21 +15,33 @@ const Blog = ({ blog, clicked, setClicked, indexOf }) => {
     marginBottom: 5,
   };
 
-  const handleClick = () => {
-    const clickedCopy = Array.from(clicked);
-    clickedCopy[indexOf] = !clickedCopy[indexOf];
-    setClicked(clickedCopy);
-  }
-
   return (
-    <div
-      style={blogStyle}
-      onClick={handleClick}
-    >
-      {clicked[indexOf] ? <BlogExpandedView blog={blog} /> : <BlogLimitedView blog={blog} />}
+    <div style={blogStyle}>
+      {
+        clicked
+          ? (
+            <BlogExpandedView
+              blog={blog}
+              clicked={clicked}
+              setClicked={setClicked}
+              setNotification={setNotification}
+            />
+          )
+          : (
+            <BlogLimitedView
+              blog={blog}
+              clicked={clicked}
+              setClicked={setClicked}
+            />
+          )
+      }
     </div>
-
   );
 };
 
-export default Blog
+Blog.propTypes = {
+  blog: PropTypes.shape(propTypesHelper.BLOG).isRequired,
+  setNotification: PropTypes.func.isRequired,
+};
+
+export default Blog;

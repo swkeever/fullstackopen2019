@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Login from './components/Login';
-import blogsService from './services/blogs';
-import Blogs from './components/Blogs'
+import Blogs from './components/Blogs';
 import tokenService from './utils/token';
 import localStorageService from './utils/local_storage';
 import Notification from './components/Notification'; import Togglable from './components/Togglable';
-import CreateBlog from './components/CreateBlog'; 
+import CreateBlog from './components/CreateBlog';
 
 const App = () => {
   const [username, setUsername] = useState('');
@@ -56,8 +55,8 @@ const App = () => {
           setNotification={setNotification}
         />
       </>
-    )
-  }
+    );
+  };
 
   return (
     <>
@@ -67,6 +66,6 @@ const App = () => {
       {user ? showLoggedInView() : showNotLoggedInView()}
     </>
   );
-}
+};
 
 export default App;

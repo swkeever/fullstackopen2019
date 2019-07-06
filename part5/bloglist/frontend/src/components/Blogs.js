@@ -1,46 +1,47 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import Blog from './Blog';
 import blogsService from '../services/blogs';
-import tokenService from '../utils/token';
 import Logout from './Logout';
-import CreateBlog from './CreateBlog';
-import Togglable from './Togglable';
+import propTypesHelper from '../utils/proptypes';
 
 const Blogs = ({
   user, setUser,
   setNotification,
 }) => {
   const [blogs, setBlogs] = useState([]);
-  const [clicked, setClicked] = useState([]);
 
   useEffect(() => {
     const fetchBlogs = async () => {
-      const blogs = await blogsService.getAll();
-      setBlogs(blogs);
-    }
+      const fetchedBlogs = await blogsService.getAll();
+      setBlogs(fetchedBlogs);
+    };
     fetchBlogs();
   }, []);
 
   const showBlogs = () => {
-    console.log(clicked)
-    const blogsDisplay = blogs.map((blog, index) => (
+    const byLikes = (a, b) => b.likes - a.likes;
+
+    const sortedBlogs = [...blogs].sort(byLikes);
+
+    const blogsDisplay = sortedBlogs.map(blog => (
       <Blog
         key={blog.id}
         blog={blog}
-        clicked={clicked}
-        setClicked={setClicked}
-        indexOf={index}
+        setNotification={setNotification}
       />
     ));
 
     return blogsDisplay;
-  }
+  };
 
   return (
     <div>
       <h2>Blogs</h2>
       <p>
-        {user.name} logged in
+        {user.name}
+        {' '}
+        logged in
         <Logout
           setUser={setUser}
         />
@@ -48,6 +49,12 @@ const Blogs = ({
       {showBlogs()}
     </div>
   );
-}
+};
+
+Blogs.propTypes = {
+  user: PropTypes.shape(propTypesHelper.USER).isRequired,
+  setUser: PropTypes.func.isRequired,
+  setNotification: PropTypes.func.isRequired,
+};
 
 export default Blogs;

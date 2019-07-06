@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import loginService from '../services/login';
 import tokenService from '../utils/token';
 import localStorageService from '../utils/local_storage';
@@ -8,7 +9,7 @@ import notificationHelper from '../utils/notification';
 const Login = ({
   username, setUsername,
   password, setPassword,
-  setUser, 
+  setUser,
   setNotification,
 }) => {
   const userLogin = async (e) => {
@@ -20,15 +21,15 @@ const Login = ({
       const user = await loginService.login(credentials);
       localStorageService.setLocalStorage(user);
       tokenService.setToken(user.token);
-      
+
       const loginSuccess = notificationHelper.createNotification(`Logged in as ${user.name}`, notificationHelper.SUCCESS);
-      notificationHelper.setNotification(loginSuccess, setNotification);
+      notificationHelper.changeNotification(loginSuccess, setNotification);
       setUser(user);
     } catch (exception) {
-      const loginFailed = notificationHelper.createNotification('Logged in failed', notificationHelper.ERROR);
-      notificationHelper.setNotification(loginFailed, setNotification);
+      const loginFailed = notificationHelper.createNotification('Login failed', notificationHelper.ERROR);
+      notificationHelper.changeNotification(loginFailed, setNotification);
     }
-  }
+  };
 
   return (
     <div>
@@ -63,7 +64,16 @@ const Login = ({
         </div>
       </form>
     </div>
-  )
+  );
+};
+
+Login.propTypes = {
+  username: PropTypes.string.isRequired,
+  setUsername: PropTypes.func.isRequired,
+  password: PropTypes.string.isRequired,
+  setPassword: PropTypes.func.isRequired,
+  setUser: PropTypes.func.isRequired,
+  setNotification: PropTypes.func.isRequired,
 };
 
 export default Login;

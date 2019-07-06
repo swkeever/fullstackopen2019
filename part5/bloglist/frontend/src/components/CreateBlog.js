@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import formHelper from '../utils/form_helper';
 import blogsService from '../services/blogs';
 import notificationHelper from '../utils/notification';
@@ -13,18 +14,18 @@ const CreateBlog = ({ setNotification }) => {
       title,
       author,
       url,
-    }
+    };
 
     try {
       await blogsService.createBlog(blog);
 
       const notification = notificationHelper.createNotification(`New blog, ${blog.title} by ${blog.author} was created`, notificationHelper.SUCCESS);
-      notificationHelper.setNotification(notification, setNotification);
+      notificationHelper.changeNotification(notification, setNotification);
     } catch (exception) {
       const notification = notificationHelper.createNotification(`Create blog failed: ${exception.message}`, notificationHelper.ERROR);
-      notificationHelper.setNotification(notification, setNotification);
+      notificationHelper.changeNotification(notification, setNotification);
     }
-  }
+  };
 
   return (
     <div>
@@ -75,6 +76,10 @@ const CreateBlog = ({ setNotification }) => {
       </div>
     </div>
   );
+};
+
+CreateBlog.propTypes = {
+  setNotification: PropTypes.func.isRequired,
 };
 
 export default CreateBlog;

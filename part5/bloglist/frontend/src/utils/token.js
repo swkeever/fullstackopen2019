@@ -1,6 +1,8 @@
 let token = null;
 
-const setToken = (value) => token = `bearer ${value}`;
+const setToken = (value) => {
+  token = `bearer ${value}`;
+};
 
 const getToken = () => token;
 

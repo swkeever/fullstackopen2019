@@ -11,7 +11,7 @@ const user = {
   name: 'Joe Johnson',
   username: 'tester123',
   id: '234987239478234',
-}
+};
 const id = '23957823985723523';
 
 const blog = {

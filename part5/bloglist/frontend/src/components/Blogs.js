@@ -36,7 +36,7 @@ const Blogs = ({
   };
 
   return (
-    <div>
+    <div className="blogs">
       <h2>Blogs</h2>
       <p>
         {user.name}

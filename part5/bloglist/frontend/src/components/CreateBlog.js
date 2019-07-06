@@ -1,9 +1,10 @@
+/* eslint-disable no-alert */
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import blogsService from '../services/blogs';
 import notificationHelper from '../utils/notification';
 import { useField } from '../hooks';
-import _ from 'lodash';
 
 const CreateBlog = ({ setNotification }) => {
   const title = useField('text');

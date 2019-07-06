@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import loginService from '../services/login';
 import tokenService from '../utils/token';
 import localStorageService from '../utils/local_storage';
 import notificationHelper from '../utils/notification';
 import { useField } from '../hooks';
-import _ from 'lodash';
 
 const Login = ({
   setUser,
@@ -21,8 +21,8 @@ const Login = ({
   const userLogin = async (e) => {
     e.preventDefault();
 
-    const credentials = { 
-      username: username.value, 
+    const credentials = {
+      username: username.value,
       password: password.value,
     };
 

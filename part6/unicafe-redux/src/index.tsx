@@ -1,0 +1,32 @@
+import React from 'react';
+import ReactDOM from 'react-dom'
+import { createStore } from 'redux'
+import reducer from './reducer'
+import { FeedbackActionType } from './types';
+
+const store = createStore(reducer)
+
+const App = () => {
+  const updateFeedback = (feedback: FeedbackActionType): void => {
+    store.dispatch({ type: feedback });
+  }
+
+  return (
+    <div>
+      <button onClick={() => updateFeedback(FeedbackActionType.GOOD)}>good</button>
+      <button onClick={() => updateFeedback(FeedbackActionType.OK)}>neutral</button>
+      <button onClick={() => updateFeedback(FeedbackActionType.BAD)}>bad</button>
+      <button onClick={() => updateFeedback(FeedbackActionType.ZERO)}>reset stats</button>
+      <div>good {store.getState().good}</div>
+      <div>neutral {store.getState().ok}</div>
+      <div>bad {store.getState().bad}</div>
+    </div>
+  )
+}
+
+const renderApp = () => {
+  ReactDOM.render(<App />, document.getElementById('root'))
+}
+
+renderApp()
+store.subscribe(renderApp)

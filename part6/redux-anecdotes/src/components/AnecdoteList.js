@@ -1,26 +1,10 @@
 import React from 'react';
 import { voteFor } from '../reducers/anecdoteReducer';
 import { notificationChange } from '../reducers/notificationReducer';
+import { connect } from 'react-redux';
 
-const AnecdoteList = ({ store }) => {
-  
-
-  const { anecdotes, filter } = store.getState();
-
-  const applyFilterOn = (anecdotes) => {
-    return anecdotes.filter(anecdote => {
-      const filterLowerCase = filter.toLowerCase();
-      const contentLowerCase = anecdote.content.toLowerCase();
-
-      return contentLowerCase.includes(filterLowerCase);
-    })
-  }
-
-  const filteredAnecdotes = applyFilterOn(anecdotes);
-
-  const byVotes = (a, b) => b.votes - a.votes;
-
-  const sortedFilteredAnecdotes = filteredAnecdotes.sort(byVotes);
+const AnecdoteList = (props) => {
+  const anecdotes = props.visibleAnecdotes;
 
   const handleVote = (id) => {
     const getContent = () => {
@@ -30,15 +14,15 @@ const AnecdoteList = ({ store }) => {
 
     const notification = `you voted '${getContent()}'`;
 
-    store.dispatch(voteFor(id));
-    store.dispatch(notificationChange(notification));
-    setTimeout(() => store.dispatch(notificationChange('')), 5000);
+    props.voteFor(id);
+    props.notificationChange(notification);
+    setTimeout(() => props.notificationChange(''), 5000);
   };
 
   return (
     <>
       <h2>Anecdotes</h2>
-      {sortedFilteredAnecdotes.map(anecdote =>
+      {anecdotes.map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
@@ -53,4 +37,37 @@ const AnecdoteList = ({ store }) => {
   );
 };
 
-export default AnecdoteList;
+const getVisibleAnecdotes = ({anecdotes, filter}) => {
+  const applyFilterOn = (anecdotes) => {
+    return anecdotes.filter(anecdote => {
+      const filterLowerCase = filter.toLowerCase();
+      const contentLowerCase = anecdote.content.toLowerCase();
+
+      return contentLowerCase.includes(filterLowerCase);
+    })
+  }
+  
+  const filteredAnecdotes = applyFilterOn(anecdotes);
+
+  const byVotes = (a, b) => b.votes - a.votes;
+  filteredAnecdotes.sort(byVotes);
+
+  return filteredAnecdotes;
+}
+
+const mapStateToProps = (state) => {
+  console.log(state);
+  return {
+    visibleAnecdotes: getVisibleAnecdotes(state),
+  }
+}
+
+const mapDispatchToProps = {
+  voteFor,
+  notificationChange,
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(AnecdoteList);

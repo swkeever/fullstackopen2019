@@ -1,21 +1,44 @@
 import React from 'react';
-import { vote } from '../reducers/anecdoteReducer';
+import { voteFor } from '../reducers/anecdoteReducer';
+import { notificationChange } from '../reducers/notificationReducer';
 
 const AnecdoteList = ({ store }) => {
+  
+
+  const { anecdotes, filter } = store.getState();
+
+  const applyFilterOn = (anecdotes) => {
+    return anecdotes.filter(anecdote => {
+      const filterLowerCase = filter.toLowerCase();
+      const contentLowerCase = anecdote.content.toLowerCase();
+
+      return contentLowerCase.includes(filterLowerCase);
+    })
+  }
+
+  const filteredAnecdotes = applyFilterOn(anecdotes);
+
   const byVotes = (a, b) => b.votes - a.votes;
 
-  const anecdotes = store.getState().sort(byVotes)
+  const sortedFilteredAnecdotes = filteredAnecdotes.sort(byVotes);
 
   const handleVote = (id) => {
-    console.log('vote', id)
-    console.log(vote(id));
-    store.dispatch(vote(id));
-  }
+    const getContent = () => {
+      const anecdote = anecdotes.find(anecdote => anecdote.id === id);
+      return anecdote.content;
+    };
+
+    const notification = `you voted '${getContent()}'`;
+
+    store.dispatch(voteFor(id));
+    store.dispatch(notificationChange(notification));
+    setTimeout(() => store.dispatch(notificationChange('')), 5000);
+  };
 
   return (
     <>
       <h2>Anecdotes</h2>
-      {anecdotes.map(anecdote =>
+      {sortedFilteredAnecdotes.map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
@@ -24,10 +47,10 @@ const AnecdoteList = ({ store }) => {
             has {anecdote.votes}
             <button onClick={() => handleVote(anecdote.id)}>vote</button>
           </div>
-        </div>
+        </div>,
       )}
     </>
-  )
-}
+  );
+};
 
 export default AnecdoteList;

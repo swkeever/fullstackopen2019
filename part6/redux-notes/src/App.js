@@ -1,15 +1,22 @@
-import React from 'react'
-import Notes from './components/Notes'
-import NewNote from './components/NewNote'
+import React from 'react';
+import Notes from './components/Notes';
+import NewNote from './components/NewNote';
+import VisibilityFilter from './components/VisibilityFilter';
 
 const App = (props) => {
+  const store = props.store;
+
+  const filterSelected = (value) => () => {
+    console.log(value);
+  };
 
   return (
-    <div>
-      <NewNote store={props.store} />
-      <Notes store={props.store} />
-    </div>
-  )
-}
+      <div>
+        <NewNote store={store}/>
+        <VisibilityFilter store={store}/>
+        <Notes store={store}/>
+      </div>
+  );
+};
 
-export default App
+export default App;

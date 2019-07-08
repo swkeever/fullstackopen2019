@@ -1,17 +1,26 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { createStore } from 'redux'
-import App from './App'
-import noteReducer from './reducers/noteReducer'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {combineReducers, createStore} from 'redux';
+import App from './App';
+import noteReducer from './reducers/noteReducer';
+import filterReducer from './reducers/filterReducer';
+import { Provider } from 'react-redux';
 
-const store = createStore(noteReducer)
+const reducer = combineReducers({
+  notes: noteReducer,
+  filter: filterReducer,
+});
+
+const store = createStore(reducer);
 
 const renderApp = () => {
   ReactDOM.render(
-    <App store={store} />,
-    document.getElementById('root')
-  )
-}
+    <Provider store={store}>
+      <App />
+    </Provider>,
+      document.getElementById('root'),
+  );
+};
 
-renderApp()
-store.subscribe(renderApp)
+renderApp();
+store.subscribe(renderApp);

@@ -1,22 +1,47 @@
-import React from 'react'
-import Note from './Note'
+import React from 'react';
+import Note from './Note';
+import { connect } from 'react-redux';
 
-import { toggleImportanceOf } from '../reducers/noteReducer'
+import { toggleImportanceOf } from '../reducers/noteReducer';
 
-const Notes = ({ store }) => {
+const Notes = (props) => {
   return (
     <ul>
-      {store.getState().map(note =>
+      {props.visibleNotes.map(note =>
         <Note
           key={note.id}
           note={note}
           handleClick={() =>
-            store.dispatch(toggleImportanceOf(note.id))
+            () => props.toggleImportanceOf(note.id)
           }
-        />
+        />,
       )}
     </ul>
-  )
+  );
+};
+
+const notesToShow = ({ notes, filter, }) => {
+  if (filter === 'ALL') {
+    return notes;
+  }
+
+  return filter === 'IMPORTANT'
+    ? notes.filter(note => note.important)
+    : notes.filter(note => !note.important);
+};
+
+const mapStateToProps = (state) => {
+  return {
+    visibleNotes: notesToShow(state),
+  }
 }
 
-export default Notes
+const mapDispatchToProps = {
+  toggleImportanceOf,
+};
+
+const ConnectedNotes = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Notes);
+export default ConnectedNotes;

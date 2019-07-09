@@ -20,7 +20,6 @@ const store = createStore(counterReducer);
 
 store.subscribe(() => {
   const storeNow = store.getState();
-  console.log(storeNow);
 });
 
 const App: React.FC = () => {

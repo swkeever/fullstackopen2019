@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 import Notes from './components/Notes';
 import NewNote from './components/NewNote';
 import VisibilityFilter from './components/VisibilityFilter';
+import { initializeNotes } from './reducers/noteReducer';
 
 const App = (props) => {
+  useEffect(() => {
+    props.initializeNotes();
+  })
   const store = props.store;
 
   const filterSelected = (value) => () => {
@@ -11,12 +16,12 @@ const App = (props) => {
   };
 
   return (
-      <div>
-        <NewNote store={store}/>
-        <VisibilityFilter store={store}/>
-        <Notes store={store}/>
-      </div>
+    <div>
+      <NewNote store={store} />
+      <VisibilityFilter store={store} />
+      <Notes store={store} />
+    </div>
   );
 };
 
-export default App;
+export default connect(null, { initializeNotes })(App);

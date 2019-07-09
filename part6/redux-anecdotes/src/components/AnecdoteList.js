@@ -37,7 +37,7 @@ const AnecdoteList = (props) => {
   );
 };
 
-const getVisibleAnecdotes = ({anecdotes, filter}) => {
+const getVisibleAnecdotes = ({ anecdotes, filter }) => {
   const applyFilterOn = (anecdotes) => {
     return anecdotes.filter(anecdote => {
       const filterLowerCase = filter.toLowerCase();
@@ -46,7 +46,7 @@ const getVisibleAnecdotes = ({anecdotes, filter}) => {
       return contentLowerCase.includes(filterLowerCase);
     })
   }
-  
+
   const filteredAnecdotes = applyFilterOn(anecdotes);
 
   const byVotes = (a, b) => b.votes - a.votes;
@@ -56,7 +56,6 @@ const getVisibleAnecdotes = ({anecdotes, filter}) => {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
     visibleAnecdotes: getVisibleAnecdotes(state),
   }

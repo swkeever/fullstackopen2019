@@ -1,13 +1,16 @@
 import React from 'react';
 import { createAnecdote } from '../reducers/anecdoteReducer';
 import { connect } from 'react-redux';
+import noteService from '../services/anecdotes';
 
 const NewAnecdote = (props) => {
-  const addAnecdote = (event) => {
+  const addAnecdote = async (event) => {
     event.preventDefault();
     const content = event.target.new_anecdote.value;
     event.target.new_anecdote.value = '';
-    props.createAnecdote(content);
+
+    const newAnecdote = await noteService.createNew(content);
+    props.createAnecdote(newAnecdote);
   };
 
   return (
@@ -25,15 +28,7 @@ const NewAnecdote = (props) => {
   );
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    createAnecdote: value => {
-      dispatch(createAnecdote(value))
-    }
-  }
-}
-
 export default connect(
   null,
-  mapDispatchToProps,
+  { createAnecdote },
 )(NewAnecdote);

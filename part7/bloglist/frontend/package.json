@@ -1,13 +1,16 @@
 {
-  "name": "notes-frontend",
+  "name": "frontend2",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@testing-library/dom": "^5.5.0",
+    "@testing-library/react": "^8.0.4",
     "axios": "^0.19.0",
+    "jest-dom": "^3.5.0",
+    "lodash": "^4.17.11",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1"
   },
   "scripts": {
@@ -15,15 +18,13 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": "json-server -p3001 db.json",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "cypress:open": "cypress open"
+    "lint:fix": "eslint . --fix"
   },
-  "proxy": "http://localhost:3001",
   "eslintConfig": {
     "extends": "react-app"
   },
+  "proxy": "http://localhost:3003",
   "browserslist": {
     "production": [
       ">0.2%",
@@ -37,10 +38,10 @@
     ]
   },
   "devDependencies": {
-    "@testing-library/react": "^8.0.4",
-    "cypress": "^3.4.0",
-    "eslint": "^5.3.0",
-    "jest-dom": "^3.5.0",
-    "json-server": "^0.15.0"
+    "eslint-config-airbnb": "^17.1.1",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.14.2",
+    "eslint-plugin-react-hooks": "^1.6.1"
   }
 }

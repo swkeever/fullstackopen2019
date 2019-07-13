@@ -1,34 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Blog from './Blog';
-import blogsService from '../services/blogs';
 import Logout from './Logout';
 import propTypesHelper from '../utils/proptypes';
 
-const Blogs = ({
-  user, setUser,
-  setNotification,
-}) => {
-  const [blogs, setBlogs] = useState([]);
-
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      const fetchedBlogs = await blogsService.getAll();
-      setBlogs(fetchedBlogs);
-    };
-    fetchBlogs();
-  }, []);
-
+const Blogs = (props) => {
   const showBlogs = () => {
     const byLikes = (a, b) => b.likes - a.likes;
 
-    const sortedBlogs = [...blogs].sort(byLikes);
+    const sortedBlogs = [...props.blogs].sort(byLikes);
 
     const blogsDisplay = sortedBlogs.map(blog => (
       <Blog
         key={blog.id}
         blog={blog}
-        setNotification={setNotification}
       />
     ));
 
@@ -39,12 +25,10 @@ const Blogs = ({
     <div className="blogs">
       <h2>Blogs</h2>
       <p>
-        {user.name}
+        {props.user.name}
         {' '}
         logged in
-        <Logout
-          setUser={setUser}
-        />
+        <Logout />
       </p>
       {showBlogs()}
     </div>
@@ -52,9 +36,13 @@ const Blogs = ({
 };
 
 Blogs.propTypes = {
-  user: PropTypes.shape(propTypesHelper.USER).isRequired,
-  setUser: PropTypes.func.isRequired,
-  setNotification: PropTypes.func.isRequired,
+  blogs: PropTypes.arrayOf(PropTypes.shape(propTypesHelper.BLOG)).isRequired,
 };
 
-export default Blogs;
+const mapStateToProps = ({ user, blogs }) => ({
+  user,
+  blogs,
+});
+
+
+export default connect(mapStateToProps)(Blogs);

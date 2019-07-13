@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import propTypesHelper from '../utils/proptypes';
 
 const Notification = ({
-  notification,
+  notification = null,
 }) => {
-  if (!notification.message) {
+  if (!notification) {
     return null;
   }
+
 
   return (
     <div className={notification.class}>
@@ -18,8 +20,16 @@ const Notification = ({
   );
 };
 
-Notification.propTypes = {
-  notification: PropTypes.shape(propTypesHelper.NOTIFICATION).isRequired,
+Notification.defaultProps = {
+  notification: null,
 };
 
-export default Notification;
+Notification.propTypes = {
+  notification: PropTypes.shape(propTypesHelper.NOTIFICATION),
+};
+
+const mapStateToProps = state => ({
+  notification: state.notification,
+});
+
+export default connect(mapStateToProps)(Notification);

@@ -2,13 +2,15 @@
 /* eslint-disable no-undef */
 import React from 'react';
 import PropTypes from 'prop-types';
-import blogsService from '../services/blogs';
-import notificationHelper from '../utils/notification';
-import localStorageHelper from '../utils/local_storage';
+import { connect } from 'react-redux';
 import propTypesHelper from '../utils/proptypes';
+import { setSuccessNotification, setFailureNotification } from '../reducers/notificationReducer';
+import { removeBlog } from '../reducers/blogReducer';
 
-const RemoveBlogButton = ({ blog, setNotification }) => {
-  const removeBlog = async () => {
+const RemoveBlogButton = (props) => {
+  const { blog, user } = props;
+
+  const handleRemoveBlog = async () => {
     const asksToRemove = window.confirm(`Are you sure you want to delete ${blog.title} by ${blog.author}?`);
 
     if (!asksToRemove) {
@@ -16,28 +18,16 @@ const RemoveBlogButton = ({ blog, setNotification }) => {
     }
 
     try {
-      await blogsService.removeBlog(blog);
-      const notification = notificationHelper
-        .createNotification(
-          `${blog.title} was removed.`,
-          notificationHelper.SUCCESS,
-        );
-      notificationHelper.changeNotification(notification, setNotification);
+      await props.removeBlog(blog);
+      props.setSuccessNotification(`${blog.title} was removed.`);
     } catch (excpetion) {
-      const notification = notificationHelper
-        .createNotification(
-          `Something happened: ${excpetion.message}`,
-          notificationHelper.ERROR,
-        );
-      notificationHelper.changeNotification(notification, setNotification);
+      props.setFailureNotification(`Something happened: ${excpetion.message}`);
     }
   };
 
-  const loggedInUser = localStorageHelper.getLocalStorage();
-
-  const isMyBlog = loggedInUser
+  const isMyBlog = user
     && blog.user
-    && loggedInUser.username === blog.user.username;
+    && user.username === blog.user.username;
 
   if (!isMyBlog) {
     return null;
@@ -45,14 +35,31 @@ const RemoveBlogButton = ({ blog, setNotification }) => {
 
   return (
     <div>
-      <button type="button" onClick={removeBlog}>Remove</button>
+      <button type="button" onClick={handleRemoveBlog}>Remove</button>
     </div>
   );
 };
 
-RemoveBlogButton.propTypes = {
-  blog: PropTypes.shape(propTypesHelper.BLOG).isRequired,
-  setNotification: PropTypes.func.isRequired,
+RemoveBlogButton.defaultProps = {
+  user: null,
 };
 
-export default RemoveBlogButton;
+RemoveBlogButton.propTypes = {
+  user: PropTypes.shape(propTypesHelper.USER),
+  blog: PropTypes.shape(propTypesHelper.BLOG).isRequired,
+  setSuccessNotification: PropTypes.func.isRequired,
+  setFailureNotification: PropTypes.func.isRequired,
+  removeBlog: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = ({ user }) => ({
+  user,
+});
+
+const mapDispatchToProps = {
+  setFailureNotification,
+  setSuccessNotification,
+  removeBlog,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(RemoveBlogButton);

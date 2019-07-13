@@ -4,7 +4,7 @@ import BlogExpandedView from './BlogExpandedView';
 import BlogLimitedView from './BlogLimitedView';
 import propTypesHelper from '../utils/proptypes';
 
-const Blog = ({ blog, setNotification }) => {
+const Blog = ({ blog }) => {
   const [clicked, setClicked] = useState(false);
 
   const blogStyle = {
@@ -24,7 +24,6 @@ const Blog = ({ blog, setNotification }) => {
               blog={blog}
               clicked={clicked}
               setClicked={setClicked}
-              setNotification={setNotification}
             />
           )
           : (
@@ -41,7 +40,6 @@ const Blog = ({ blog, setNotification }) => {
 
 Blog.propTypes = {
   blog: PropTypes.shape(propTypesHelper.BLOG).isRequired,
-  setNotification: PropTypes.func.isRequired,
 };
 
 export default Blog;

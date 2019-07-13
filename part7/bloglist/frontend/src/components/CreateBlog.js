@@ -2,11 +2,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import blogsService from '../services/blogs';
-import notificationHelper from '../utils/notification';
+import { connect } from 'react-redux';
 import { useField } from '../hooks';
+import { setFailureNotification, setSuccessNotification } from '../reducers/notificationReducer';
+import { createBlog } from '../reducers/blogReducer';
 
-const CreateBlog = ({ setNotification }) => {
+const CreateBlog = (props) => {
   const title = useField('text');
   const author = useField('text');
   const url = useField('url');
@@ -16,7 +17,7 @@ const CreateBlog = ({ setNotification }) => {
   const authorProps = _.pick(author, inputProps);
   const urlProps = _.pick(url, inputProps);
 
-  const createBlog = async () => {
+  const createNewBlog = async () => {
     const blog = {
       title: title.value,
       author: author.value,
@@ -24,13 +25,10 @@ const CreateBlog = ({ setNotification }) => {
     };
 
     try {
-      await blogsService.createBlog(blog);
-
-      const notification = notificationHelper.createNotification(`New blog, ${blog.title} by ${blog.author} was created`, notificationHelper.SUCCESS);
-      notificationHelper.changeNotification(notification, setNotification);
+      await props.createBlog(blog);
+      props.setSuccessNotification(`New blog, ${blog.title} by ${blog.author} was created`);
     } catch (exception) {
-      const notification = notificationHelper.createNotification(`Create blog failed: ${exception.message}`, notificationHelper.ERROR);
-      notificationHelper.changeNotification(notification, setNotification);
+      props.setFailureNotification(`Create blog failed: ${exception.message}`);
     }
   };
 
@@ -82,7 +80,7 @@ const CreateBlog = ({ setNotification }) => {
       <div>
         <button
           type="button"
-          onClick={createBlog}
+          onClick={createNewBlog}
         >
           Create
         </button>
@@ -98,7 +96,15 @@ const CreateBlog = ({ setNotification }) => {
 };
 
 CreateBlog.propTypes = {
-  setNotification: PropTypes.func.isRequired,
+  createBlog: PropTypes.func.isRequired,
+  setSuccessNotification: PropTypes.func.isRequired,
+  setFailureNotification: PropTypes.func.isRequired,
 };
 
-export default CreateBlog;
+const mapDispatchToProps = {
+  createBlog,
+  setSuccessNotification,
+  setFailureNotification,
+};
+
+export default connect(null, mapDispatchToProps)(CreateBlog);

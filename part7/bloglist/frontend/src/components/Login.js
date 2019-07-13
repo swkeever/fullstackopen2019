@@ -1,16 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import loginService from '../services/login';
-import tokenService from '../utils/token';
-import localStorageService from '../utils/local_storage';
-import notificationHelper from '../utils/notification';
+import { connect } from 'react-redux';
 import { useField } from '../hooks';
+import { setUser } from '../reducers/userReducer';
+import { setSuccessNotification, setFailureNotification } from '../reducers/notificationReducer';
 
-const Login = ({
-  setUser,
-  setNotification,
-}) => {
+const Login = (props) => {
   const username = useField('text');
   const password = useField('password');
 
@@ -27,16 +23,10 @@ const Login = ({
     };
 
     try {
-      const user = await loginService.login(credentials);
-      localStorageService.setLocalStorage(user);
-      tokenService.setToken(user.token);
-
-      const loginSuccess = notificationHelper.createNotification(`Logged in as ${user.name}`, notificationHelper.SUCCESS);
-      notificationHelper.changeNotification(loginSuccess, setNotification);
-      setUser(user);
+      await props.setUser(credentials);
+      props.setSuccessNotification(`Logged in as ${credentials.username}`);
     } catch (exception) {
-      const loginFailed = notificationHelper.createNotification('Login failed', notificationHelper.ERROR);
-      notificationHelper.changeNotification(loginFailed, setNotification);
+      props.setFailureNotification('Login failed');
     }
   };
 
@@ -74,7 +64,16 @@ const Login = ({
 
 Login.propTypes = {
   setUser: PropTypes.func.isRequired,
-  setNotification: PropTypes.func.isRequired,
+  setSuccessNotification: PropTypes.func.isRequired,
+  setFailureNotification: PropTypes.func.isRequired,
 };
 
-export default Login;
+const mapStateToProps = ({ user }) => ({ user });
+
+const mapDispatchToProps = {
+  setUser,
+  setSuccessNotification,
+  setFailureNotification,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

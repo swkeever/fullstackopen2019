@@ -1,13 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import tokenService from '../utils/token';
-import localStorageService from '../utils/local_storage';
+import { connect } from 'react-redux';
+import { clearUser } from '../reducers/userReducer';
 
-const Logout = ({ setUser }) => {
+const Logout = (props) => {
   const logout = () => {
-    tokenService.setToken(null);
-    localStorageService.removeLocalStorage();
-    setUser(null);
+    props.clearUser();
   };
 
   return (
@@ -16,7 +14,7 @@ const Logout = ({ setUser }) => {
 };
 
 Logout.propTypes = {
-  setUser: PropTypes.func.isRequired,
+  clearUser: PropTypes.func.isRequired,
 };
 
-export default Logout;
+export default connect(null, { clearUser })(Logout);

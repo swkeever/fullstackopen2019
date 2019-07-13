@@ -1,34 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import Login from './components/Login';
 import Blogs from './components/Blogs';
-import tokenService from './utils/token';
-import localStorageService from './utils/local_storage';
 import Notification from './components/Notification'; import Togglable from './components/Togglable';
 import CreateBlog from './components/CreateBlog';
+import { initializeUser } from './reducers/userReducer';
+import propTypesHelper from './utils/proptypes';
+import { initializeBlogs } from './reducers/blogReducer';
 
-const App = () => {
-  const [user, setUser] = useState(null);
-  const [notification, setNotification] = useState({
-    message: '',
-    class: '',
-  });
+const App = ({
+  user,
+  initializeBlogs,
+  initializeUser,
+}) => {
+  useEffect(() => {
+    initializeUser();
+    initializeBlogs();
+  }, [initializeUser, initializeBlogs]);
 
   const showBlogsRef = React.createRef();
 
-  useEffect(() => {
-    const storedUser = localStorageService.getLocalStorage();
-
-    if (storedUser) {
-      tokenService.setToken(storedUser.token);
-      setUser(storedUser);
-    }
-  }, []);
-
   const showNotLoggedInView = () => (
-    <Login
-      setUser={setUser}
-      setNotification={setNotification}
-    />
+    <Login />
   );
 
   const showLoggedInView = () => {
@@ -39,27 +33,38 @@ const App = () => {
     return (
       <>
         <Togglable buttonLabel="Create Blog">
-          <CreateBlog
-            setNotification={setNotification}
-          />
+          <CreateBlog />
         </Togglable>
-        <Blogs
-          user={user}
-          setUser={setUser}
-          setNotification={setNotification}
-        />
+        <Blogs />
       </>
     );
   };
 
   return (
     <>
-      <Notification
-        notification={notification}
-      />
+      <Notification />
       {user ? showLoggedInView() : showNotLoggedInView()}
     </>
   );
 };
 
-export default App;
+App.defaultProps = {
+  user: null,
+};
+
+App.propTypes = {
+  user: PropTypes.shape(propTypesHelper.USER),
+  initializeBlogs: PropTypes.func.isRequired,
+  initializeUser: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = ({ user }) => ({
+  user,
+});
+
+const mapDispatchToProps = {
+  initializeUser,
+  initializeBlogs,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

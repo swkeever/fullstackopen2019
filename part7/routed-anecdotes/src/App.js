@@ -70,10 +70,10 @@ const App = () => {
           exact
           path="/anecdotes/:id"
           render={({ match }) => {
-            console.log(match.params.id);
             return <Anecdote anecdote={anecdoteById(match.params.id)} />;
           }}
         />
+
       </Router>
       <Footer />
     </div>

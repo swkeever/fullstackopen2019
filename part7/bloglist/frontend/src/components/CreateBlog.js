@@ -86,17 +86,19 @@ URL
           </label>
         </Form.Field>
         <Button
+          icon="check"
+          color="green"
+          content="Create"
           type="button"
           onClick={createNewBlog}
-        >
-          Create
-        </Button>
+        />
         <Button
+          color="yellow"
+          icon="undo"
           type="button"
           onClick={resetForm}
-        >
-          Reset
-        </Button>
+          content="Reset"
+        />
       </Form>
     </div>
   );

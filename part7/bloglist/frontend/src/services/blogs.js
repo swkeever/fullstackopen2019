@@ -3,6 +3,12 @@ import tokenService from '../utils/token';
 
 const baseUrl = '/api/blogs';
 
+const authorize = () => ({
+  headers: {
+    Authorization: tokenService.getToken(),
+  },
+});
+
 const getAll = async () => {
   const response = await axios.get(baseUrl);
   return response.data;
@@ -12,12 +18,6 @@ const commentOnBlog = async (blog, content) => {
   const response = await axios.post(`${baseUrl}/${blog.id}/comments`, { content }, authorize());
   return response.data;
 };
-
-const authorize = () => ({
-  headers: {
-    Authorization: tokenService.getToken(),
-  },
-});
 
 const createBlog = async (blog) => {
   const response = await axios.post(baseUrl, blog, authorize());

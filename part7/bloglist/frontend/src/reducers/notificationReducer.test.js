@@ -1,6 +1,5 @@
-import deepFreeze from 'deep-freeze';
 import notificationReducer, {
-  NotificationActionTypes, setNotification, clearNotification, setSuccessNotification,
+  NotificationActionTypes,
 } from './notificationReducer';
 
 describe('notificationReducer', () => {

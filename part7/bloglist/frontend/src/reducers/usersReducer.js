@@ -2,7 +2,7 @@ import usersService from '../services/users';
 
 export const UsersActionTypes = {
   INITIALIZE: 'INIT_USERS',
-}
+};
 
 const usersReducer = (state = [], action) => {
   switch (action.type) {
@@ -11,7 +11,7 @@ const usersReducer = (state = [], action) => {
     default:
       return state;
   }
-}
+};
 
 export const initializeUsers = () => async (dispatch) => {
   const users = await usersService.getAll();
@@ -19,6 +19,6 @@ export const initializeUsers = () => async (dispatch) => {
     type: UsersActionTypes.INITIALIZE,
     users,
   });
-} 
+};
 
 export default usersReducer;

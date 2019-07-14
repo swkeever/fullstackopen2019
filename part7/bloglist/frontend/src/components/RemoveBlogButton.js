@@ -3,10 +3,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Button } from 'semantic-ui-react';
 import propTypesHelper from '../utils/proptypes';
 import { setSuccessNotification, setFailureNotification } from '../reducers/notificationReducer';
 import { removeBlog } from '../reducers/blogReducer';
-import { Button } from 'semantic-ui-react';
 
 const RemoveBlogButton = (props) => {
   const { blog, user } = props;
@@ -35,7 +35,7 @@ const RemoveBlogButton = (props) => {
   }
 
   return (
-      <Button content="Delete" icon="trash" type="button" onClick={handleRemoveBlog} />
+    <Button content="Delete" icon="trash" type="button" onClick={handleRemoveBlog} />
   );
 };
 

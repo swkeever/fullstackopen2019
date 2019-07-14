@@ -3,6 +3,7 @@ const blogsRouter = require('express').Router();
 const jwt = require('jsonwebtoken');
 const Blog = require('../models/blog');
 const User = require('../models/user');
+const Comment = require('../models/comment');
 
 blogsRouter.get('/', async (request, response, next) => {
   try {
@@ -11,7 +12,10 @@ blogsRouter.get('/', async (request, response, next) => {
       .populate('user', {
         username: 1,
         name: 1,
-        id: 1,
+      })
+      .populate('comments', {
+        content: 1,
+        date: 1,
       });
 
     response.json(blogs.map(blog => blog.toJSON()));
@@ -20,16 +24,16 @@ blogsRouter.get('/', async (request, response, next) => {
   }
 });
 
+const tokenMissingOrInvalid = { error: 'token missing or invalid' };
+
 blogsRouter.post('/', async (request, response, next) => {
   try {
     const { body } = request;
 
     const decodedToken = jwt.verify(request.token, process.env.SECRET);
 
-    if (!request.token || !decodedToken.id) {
-      response
-        .status(401)
-        .json({ error: 'token missing or invalid' });
+    if (!(request.token && decodedToken.id)) {
+      response.status(401).json(tokenMissingOrInvalid);
       return;
     }
 
@@ -45,6 +49,36 @@ blogsRouter.post('/', async (request, response, next) => {
     user.blogs = user.blogs.concat(savedBlog._id);
     await user.save();
     response.status(201).json(savedBlog);
+  } catch (exception) {
+    next(exception);
+  }
+});
+
+blogsRouter.post('/:id/comments', async (request, response, next) => {
+  try {
+    const { body } = request;
+
+    const decodedToken = jwt.verify(request.token, process.env.SECRET);
+
+    if (!(request.token && decodedToken.id)) {
+      response.status(401).json(tokenMissingOrInvalid);
+      return;
+    }
+
+    const blog = await Blog.findById(request.params.id);
+
+    const comment = new Comment({
+      content: body.content,
+      date: new Date(),
+      blog: blog._id,
+    });
+
+    const savedComment = await comment.save();
+
+    blog.comments = blog.comments.concat(comment._id);
+
+    await blog.save();
+    response.status(201).json(savedComment);
   } catch (exception) {
     next(exception);
   }

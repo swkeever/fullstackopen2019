@@ -1,8 +1,7 @@
 import deepFreeze from 'deep-freeze';
 import blogReducer, {
-  createBlog, removeBlog, likeBlog, BlogActionTypes,
+  BlogActionTypes,
 } from './blogReducer';
-import Blog from '../components/Blog';
 
 describe('blogReducer', () => {
   const mockBlog = {

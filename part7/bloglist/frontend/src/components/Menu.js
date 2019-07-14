@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -31,14 +32,13 @@ const Header = ({ user, clearUser }) => {
         Logout
         </Menu.Item>
       </Menu.Menu>
-
-
     </Menu>
   );
 };
 
 Header.propTypes = {
   user: PropTypes.shape(propTypesHelper.USER).isRequired,
+  clearUser: PropTypes.func.isRequired,
 };
 
 

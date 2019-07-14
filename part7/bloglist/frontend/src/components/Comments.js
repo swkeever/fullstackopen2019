@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -25,7 +26,7 @@ const Comments = ({
     ));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async () => {
     try {
       await commentOnBlog(blog, comment);
       setSuccessNotification('Comment posted!');

@@ -38,7 +38,6 @@ export const initializeUser = () => async (dispatch) => {
 
 export const setUser = credentials => async (dispatch) => {
   const user = await loginService.login(credentials);
-  console.log(user)
   localStorageService.setLocalStorage(user);
   tokenService.setToken(user.token);
 

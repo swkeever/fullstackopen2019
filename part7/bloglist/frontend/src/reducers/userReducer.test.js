@@ -1,5 +1,5 @@
 import deepFreeze from 'deep-freeze';
-import userReducer, { UserActionTypes, userLogin, userLogout } from './userReducer';
+import userReducer, { UserActionTypes } from './userReducer';
 
 describe('userReducer', () => {
   const mockUser = {

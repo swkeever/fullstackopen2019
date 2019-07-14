@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-shadow */
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
@@ -30,7 +31,9 @@ const App = ({
     initializeUser();
     initializeBlogs();
     initializeUsers();
-  }, [initializeUser, initializeBlogs, initializeUsers]);
+  }, []);
+
+  console.log(users);
 
   const userById = id => users.find(u => u.id === id);
   const blogById = id => blogs.find(b => b.id === id);
@@ -56,7 +59,7 @@ const App = ({
             render={({ match }) => <User user={userById(match.params.id)} />}
           />
           <Route
-            exact
+            eblogsxact
             path="/blogs/:id"
             render={({ match }) => <Blog blog={blogById(match.params.id)} />}
           />

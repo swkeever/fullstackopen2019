@@ -19,6 +19,18 @@ const CreateBlog = (props) => {
   const authorProps = _.pick(author, inputProps);
   const urlProps = _.pick(url, inputProps);
 
+  const resetForm = () => {
+    const asksToReset = window.confirm('Are you sure you want to cancel this blog post?');
+
+    if (!asksToReset) {
+      return;
+    }
+
+    title.reset();
+    author.reset();
+    url.reset();
+  };
+
   const createNewBlog = async (e) => {
     e.preventDefault();
 
@@ -34,21 +46,12 @@ const CreateBlog = (props) => {
     try {
       await props.createBlog(blog);
       props.setSuccessNotification(`New blog, ${blog.title} by ${blog.author} was created`);
+      title.reset();
+      author.reset();
+      url.reset();
     } catch (exception) {
       props.setFailureNotification(`Create blog failed: ${exception.message}`);
     }
-  };
-
-  const resetForm = () => {
-    const asksToReset = window.confirm('Are you sure you want to cancel this blog post?');
-
-    if (!asksToReset) {
-      return;
-    }
-
-    title.reset();
-    author.reset();
-    url.reset();
   };
 
   return (
@@ -86,6 +89,7 @@ URL
           </label>
         </Form.Field>
         <Button
+          id="create-blog-button"
           icon="check"
           color="green"
           content="Create"
@@ -93,6 +97,7 @@ URL
           onClick={createNewBlog}
         />
         <Button
+          id="reset-blog-button"
           color="yellow"
           icon="undo"
           type="button"

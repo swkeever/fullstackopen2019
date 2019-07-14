@@ -1,5 +1,5 @@
 {
-  "name": "frontend2",
+  "name": "frontend-webpack",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -13,21 +13,16 @@
     "react-dom": "^16.8.6",
     "react-redux": "^7.1.0",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.0.1",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "semantic-ui-react": "^0.87.3"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "lint:fix": "eslint . --fix",
+    "build": "webpack --mode=production",
+    "start": "webpack-dev-server --mode=development",
+    "cypress:open": "cypress open"
   },
   "proxy": "http://localhost:3003",
   "browserslist": {
@@ -43,11 +38,26 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.5.4",
+    "@babel/polyfill": "^7.4.4",
+    "@babel/preset-env": "^7.5.4",
+    "@babel/preset-react": "^7.0.0",
+    "babel-eslint": "^10.0.2",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.0.0",
+    "cypress": "^3.4.0",
     "deep-freeze": "0.0.1",
+    "eslint": "^6.0.1",
     "eslint-config-airbnb": "^17.1.1",
+    "eslint-loader": "^2.2.1",
     "eslint-plugin-import": "^2.18.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.14.2",
-    "eslint-plugin-react-hooks": "^1.6.1"
-  }
+    "eslint-plugin-react-hooks": "^1.6.1",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.35.3",
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-server": "^3.7.2"
+  },
+  "license": "MIT"
 }

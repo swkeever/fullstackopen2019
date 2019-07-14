@@ -17,18 +17,18 @@ const Header = ({ user, clearUser }) => {
   return (
     <Menu pointing>
       <Menu.Item header>Blog App</Menu.Item>
-      <Menu.Item name="blogs" active={activeItem === 'blogs'} onClick={() => setActiveItem('blogs')} as={Link} to="/">
+      <Menu.Item id="menu-blogs" name="blogs" active={activeItem === 'blogs'} onClick={() => setActiveItem('blogs')} as={Link} to="/">
         Blogs
       </Menu.Item>
-      <Menu.Item name="users" active={activeItem === 'users'} onClick={() => setActiveItem('users')} as={Link} to="/users">
+      <Menu.Item id="menu-users" name="users" active={activeItem === 'users'} onClick={() => setActiveItem('users')} as={Link} to="/users">
         Users
       </Menu.Item>
       <Menu.Menu position="right">
-        <Menu.Item name="my-profile" active={activeItem === 'my-profile'} onClick={() => setActiveItem('my-profile')} as={Link} to={`/users/${user.id}`}>
+        <Menu.Item id="menu-my-profile" name="my-profile" active={activeItem === 'my-profile'} onClick={() => setActiveItem('my-profile')} as={Link} to={`/users/${user.id}`}>
           <Icon name="user" />
           {user.name}
         </Menu.Item>
-        <Menu.Item name="logout" onClick={logout}>
+        <Menu.Item id="menu-logout" name="logout" onClick={logout}>
         Logout
         </Menu.Item>
       </Menu.Menu>

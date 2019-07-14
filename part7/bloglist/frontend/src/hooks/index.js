@@ -17,8 +17,3 @@ export const useField = (type) => {
     reset,
   };
 };
-
-export const useResource = () => {
-
-
-};

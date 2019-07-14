@@ -5,6 +5,7 @@ export const BlogActionTypes = {
   LIKE: 'LIKE_BLOG',
   REMOVE: 'REMOVE_BLOG',
   INITIALIZE: 'INIT_BLOGS',
+  COMMENT: 'COMMENT_ON_BLOG',
 };
 
 const likeBlogAtId = (blogs, id) => {
@@ -23,9 +24,20 @@ const blogReducer = (state = [], action) => {
       return [...state, action.data];
     case BlogActionTypes.INITIALIZE:
       return action.data;
+    case BlogActionTypes.COMMENT:
+      return [...state, action.data];
     default:
       return state;
   }
+};
+
+export const commentOnBlog = (blog, comment) => async (dispatch) => {
+  const responseData = await blogService.commentOnBlog(blog, comment);
+  console.log('blog reducer', responseData);
+  dispatch({
+    type: BlogActionTypes.COMMENT,
+    data: responseData,
+  });
 };
 
 export const createBlog = data => async (dispatch) => {

@@ -8,6 +8,13 @@ const getAll = async () => {
   return response.data;
 };
 
+const commentOnBlog = async (blog, content) => {
+  console.log('heeeere')
+  const response = await axios.post(`${baseUrl}/${blog.id}/comments`, { content }, authorize());
+  console.log(response.data)
+  return response.data;
+};
+
 const authorize = () => ({
   headers: {
     Authorization: tokenService.getToken(),
@@ -41,4 +48,5 @@ export default {
   createBlog,
   likeBlog,
   removeBlog,
+  commentOnBlog,
 };

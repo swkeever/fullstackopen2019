@@ -18,8 +18,8 @@
     "semantic-ui-react": "^0.87.3"
   },
   "scripts": {
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "eslint src/**",
+    "lint:fix": "npm run lint --fix",
     "build": "webpack --mode=production",
     "start": "webpack-dev-server --mode=development",
     "cypress:open": "cypress open"

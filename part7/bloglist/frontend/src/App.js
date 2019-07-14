@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable no-shadow */
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
@@ -32,8 +31,6 @@ const App = ({
     initializeBlogs();
     initializeUsers();
   }, []);
-
-  console.log(users);
 
   const userById = id => users.find(u => u.id === id);
   const blogById = id => blogs.find(b => b.id === id);

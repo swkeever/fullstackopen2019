@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Button, Header } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 import localStorageHelper from '../utils/local_storage';
 import RemoveBlogButton from './RemoveBlogButton';
 import propTypesHelper from '../utils/proptypes';
@@ -28,25 +30,31 @@ const Blog = (props) => {
   return (
     <>
       <div>
-        <h2>{`${blog.title} by ${blog.author}`}</h2>
+        <Header as="h2">
+          {blog.title}
+          <Header.Subheader>{blog.author}</Header.Subheader>
+        </Header>
+
       </div>
       <div>
         <a href={blog.url}>{blog.url}</a>
       </div>
       <div className="likes">
-        {`${blog.likes} likes`}
-        <button
-          type="button"
+        <Button
+          color="red"
+          content="Like"
+          icon="heart"
+          label={{
+            basic: true, color: 'red', pointing: 'left', content: blog.likes,
+          }}
           onClick={handleNewLike}
-        >
-          Like
-        </button>
+        />
       </div>
-      <div>
+      <Header sub>
         Added by
         {' '}
-        {blog.user ? blog.user.name : 'Unknown'}
-      </div>
+        <Link to={`/users/${blog.user.id}`}>{blog.user.username}</Link>
+      </Header>
       <Comments blog={blog} />
       {
         blog.user === localStorageHelper.getLocalStorage()

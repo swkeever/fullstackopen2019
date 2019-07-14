@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { connect } from 'react-redux';
+import { Container, Form, Button, Header } from 'semantic-ui-react';
 import { useField } from '../hooks';
 import { setUser } from '../reducers/userReducer';
 import { setSuccessNotification, setFailureNotification } from '../reducers/notificationReducer';
@@ -31,10 +32,10 @@ const Login = (props) => {
   };
 
   return (
-    <div className="login-form">
-      <h2>Login</h2>
-      <form onSubmit={userLogin}>
-        <div>
+    <Container>
+      <Header as="h2">Login</Header>
+      <Form onSubmit={userLogin}>
+        <Form.Field>
           <label htmlFor="username">
             <input
               {...usernameProps}
@@ -42,8 +43,8 @@ const Login = (props) => {
               name="username"
             />
           </label>
-        </div>
-        <div>
+        </Form.Field>
+        <Form.Field>
           <label htmlFor="password">
             <input
               {...passwordProps}
@@ -51,14 +52,12 @@ const Login = (props) => {
               name="username"
             />
           </label>
-        </div>
-        <div>
-          <button type="submit">
+        </Form.Field>
+        <Button type="submit">
             Login
-          </button>
-        </div>
-      </form>
-    </div>
+        </Button>
+      </Form>
+    </Container>
   );
 };
 

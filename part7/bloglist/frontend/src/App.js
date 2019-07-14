@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {
   BrowserRouter as Router, Route,
 } from 'react-router-dom';
+import { Container } from 'semantic-ui-react';
 import Login from './components/Login';
 import { initializeUser } from './reducers/userReducer';
 import propTypesHelper from './utils/proptypes';
@@ -43,7 +44,7 @@ const App = ({
   }
 
   return (
-    <>
+    <Container>
       <Router>
         <RouteContainer>
           <Route exact path="/" render={() => <Blogs />} />
@@ -60,7 +61,7 @@ const App = ({
           />
         </RouteContainer>
       </Router>
-    </>
+    </Container>
   );
 };
 

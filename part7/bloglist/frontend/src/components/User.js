@@ -1,12 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { List, Header } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 import propTypesHelper from '../utils/proptypes';
 
 const User = ({ user }) => {
   const usersBlogs = () => user.blogs.map(blog => (
-    <li key={blog.id}>
-      {blog.title}
-    </li>
+    <List.Item key={blog.id}>
+      <Link to={`/blogs/${blog.id}`}>
+        {blog.title}
+      </Link>
+    </List.Item>
   ));
 
   if (!user) {
@@ -15,17 +19,21 @@ const User = ({ user }) => {
 
   return (
     <div>
-      <h2>{user.name}</h2>
-      <h3>Blogs added</h3>
-      <ul>
+      <Header as="h2">{user.name}</Header>
+      <Header as="h3">Blogs added</Header>
+      <List>
         {usersBlogs()}
-      </ul>
+      </List>
     </div>
   );
 };
 
+User.defaultProps = {
+  user: null,
+};
+
 User.propTypes = {
-  user: PropTypes.shape(propTypesHelper.USER).isRequired,
+  user: PropTypes.shape(propTypesHelper.USER),
 };
 
 export default User;

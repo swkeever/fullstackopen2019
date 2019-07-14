@@ -9,9 +9,7 @@ const getAll = async () => {
 };
 
 const commentOnBlog = async (blog, content) => {
-  console.log('heeeere')
   const response = await axios.post(`${baseUrl}/${blog.id}/comments`, { content }, authorize());
-  console.log(response.data)
   return response.data;
 };
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Message, Container } from 'semantic-ui-react';
 import propTypesHelper from '../utils/proptypes';
 
 const Notification = ({
@@ -10,13 +11,29 @@ const Notification = ({
     return null;
   }
 
+  if (notification.class === 'error') {
+    return (
+      <Container>
+        <Message negative>
+          <Message.Header>Error.</Message.Header>
+          <p>{notification.message}</p>
+        </Message>
+      </Container>
+
+    );
+  }
 
   return (
-    <div className={notification.class}>
-      <p>
-        {notification.message}
-      </p>
-    </div>
+    <Container>
+      <Message positive>
+        <Message.Header>Success!</Message.Header>
+        <p>
+          {notification.message}
+        </p>
+      </Message>
+    </Container>
+
+
   );
 };
 

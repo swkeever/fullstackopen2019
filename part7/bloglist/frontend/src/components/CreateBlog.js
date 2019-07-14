@@ -3,9 +3,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { connect } from 'react-redux';
+import { Form, Button } from 'semantic-ui-react';
 import { useField } from '../hooks';
 import { setFailureNotification, setSuccessNotification } from '../reducers/notificationReducer';
 import { createBlog } from '../reducers/blogReducer';
+import propTypesHelper from '../utils/proptypes';
 
 const CreateBlog = (props) => {
   const title = useField('text');
@@ -17,11 +19,16 @@ const CreateBlog = (props) => {
   const authorProps = _.pick(author, inputProps);
   const urlProps = _.pick(url, inputProps);
 
-  const createNewBlog = async () => {
+  const createNewBlog = async (e) => {
+    e.preventDefault();
+
     const blog = {
       title: title.value,
       author: author.value,
       url: url.value,
+      comments: [],
+      user: props.user,
+      likes: 0,
     };
 
     try {
@@ -47,59 +54,64 @@ const CreateBlog = (props) => {
   return (
     <div>
       <h2>Create Blog</h2>
-      <div>
-        <label htmlFor="new-blog-title">
-          Title:
-          <input
-            {...titleProps}
-            id="new-blog-title"
-            name="blog_title"
-          />
-        </label>
-      </div>
-      <div>
-        <label htmlFor="new-blog-author">
-          Author:
-          <input
-            {...authorProps}
-            id="new-blog-author"
-            name="blog_author"
-          />
-        </label>
-      </div>
-      <div>
-        <label htmlFor="new-blog-url">
-          URL:
-          <input
-            {...urlProps}
-            id="new-blog-url"
-            name="blog_url"
-          />
-        </label>
-      </div>
-      <div>
-        <button
+      <Form>
+        <Form.Field>
+          <label htmlFor="new-blog-title">
+Title
+            <input
+              {...titleProps}
+              id="new-blog-title"
+              name="blog_title"
+            />
+          </label>
+        </Form.Field>
+        <Form.Field>
+          <label htmlFor="new-blog-author">
+Author
+            <input
+              {...authorProps}
+              id="new-blog-author"
+              name="blog_author"
+            />
+          </label>
+        </Form.Field>
+        <Form.Field>
+          <label htmlFor="new-blog-url">
+URL
+            <input
+              {...urlProps}
+              id="new-blog-url"
+              name="blog_url"
+            />
+          </label>
+        </Form.Field>
+        <Button
           type="button"
           onClick={createNewBlog}
         >
           Create
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
           onClick={resetForm}
         >
           Reset
-        </button>
-      </div>
+        </Button>
+      </Form>
     </div>
   );
 };
 
 CreateBlog.propTypes = {
+  user: PropTypes.shape(propTypesHelper.USER).isRequired,
   createBlog: PropTypes.func.isRequired,
   setSuccessNotification: PropTypes.func.isRequired,
   setFailureNotification: PropTypes.func.isRequired,
 };
+
+const mapStateToProps = ({ user }) => ({
+  user,
+});
 
 const mapDispatchToProps = {
   createBlog,
@@ -107,4 +119,4 @@ const mapDispatchToProps = {
   setFailureNotification,
 };
 
-export default connect(null, mapDispatchToProps)(CreateBlog);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateBlog);

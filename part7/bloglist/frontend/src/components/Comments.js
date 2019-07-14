@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import {
+  Header, Form, Button, List,
+} from 'semantic-ui-react';
 import propTypesHelper from '../utils/proptypes';
 import { commentOnBlog } from '../reducers/blogReducer';
+import { setSuccessNotification, setFailureNotification } from '../reducers/notificationReducer';
 
-const Comments = ({ blog, commentOnBlog }) => {
+const Comments = ({
+  blog, commentOnBlog, setSuccessNotification, setFailureNotification,
+}) => {
   const [comment, setComment] = useState('');
 
   const showComments = () => {
@@ -13,24 +19,35 @@ const Comments = ({ blog, commentOnBlog }) => {
     comments.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     return comments.map(comment => (
-      <li key={comment.id}>
+      <List.Item key={comment.id}>
         {comment.content}
-      </li>
+      </List.Item>
     ));
   };
 
   const handleSubmit = async (e) => {
-    commentOnBlog(blog, comment);
+    try {
+      await commentOnBlog(blog, comment);
+      setSuccessNotification('Comment posted!');
+      setComment('');
+    } catch (exception) {
+      setFailureNotification('Comment post failed.');
+    }
   };
 
   return (
     <div>
-      <h3>Comments</h3>
-      <form onSubmit={handleSubmit}>
-        <input value={comment} onChange={({ target }) => setComment(target.value)} type="text" />
-        <button type="submit">Add comment</button>
-      </form>
-      {showComments()}
+      <Header as="h3">Comments</Header>
+      <Form onSubmit={handleSubmit}>
+        <Form.Field>
+          <input value={comment} onChange={({ target }) => setComment(target.value)} type="text" />
+        </Form.Field>
+        <Button color="green" icon="comment" content="Add comment" type="submit" />
+      </Form>
+      <List bulleted>
+        {showComments()}
+      </List>
+
     </div>
   );
 };
@@ -38,10 +55,14 @@ const Comments = ({ blog, commentOnBlog }) => {
 Comments.propTypes = {
   blog: PropTypes.shape(propTypesHelper.BLOG).isRequired,
   commentOnBlog: PropTypes.func.isRequired,
+  setFailureNotification: PropTypes.func.isRequired,
+  setSuccessNotification: PropTypes.func.isRequired,
 };
 
-const mapPropsToState = {
+const mapDispatchToProps = {
   commentOnBlog,
+  setFailureNotification,
+  setSuccessNotification,
 };
 
-export default connect(null, mapPropsToState)(Comments);
+export default connect(null, mapDispatchToProps)(Comments);

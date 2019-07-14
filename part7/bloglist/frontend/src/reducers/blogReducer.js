@@ -25,7 +25,8 @@ const blogReducer = (state = [], action) => {
     case BlogActionTypes.INITIALIZE:
       return action.data;
     case BlogActionTypes.COMMENT:
-      return [...state, action.data];
+      const updatedBlog = action.data;
+      return state.map(blog => (blog.id === updatedBlog.id ? updatedBlog : blog));
     default:
       return state;
   }
@@ -33,10 +34,20 @@ const blogReducer = (state = [], action) => {
 
 export const commentOnBlog = (blog, comment) => async (dispatch) => {
   const responseData = await blogService.commentOnBlog(blog, comment);
-  console.log('blog reducer', responseData);
+
+  const commentData = {
+    ...responseData,
+  };
+
+  delete commentData.blog;
+
+  console.log(responseData);
   dispatch({
     type: BlogActionTypes.COMMENT,
-    data: responseData,
+    data: {
+      ...blog,
+      comments: blog.comments.concat(commentData),
+    },
   });
 };
 

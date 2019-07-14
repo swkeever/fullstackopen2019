@@ -4,7 +4,7 @@ const USER = {
   name: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
   token: PropTypes.string,
-  id: PropTypes.string,
+  id: PropTypes.string.isRequired,
 };
 
 const COMMENT = {
@@ -18,9 +18,21 @@ const BLOG = {
   title: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
-  user: PropTypes.shape(USER).isRequired,
-  comments: PropTypes.arrayOf(PropTypes.shape(COMMENT)).isRequired,
-  id: PropTypes.string.isRequired,
+  user: PropTypes.oneOfType(
+    [
+      PropTypes.shape(USER),
+      PropTypes.string,
+    ],
+  ).isRequired,
+  comments: PropTypes.arrayOf(
+    PropTypes.oneOfType(
+      [
+        PropTypes.shape(COMMENT),
+        PropTypes.string,
+      ],
+    ),
+  ).isRequired,
+  id: PropTypes.string,
 };
 
 const NOTIFICATION = {

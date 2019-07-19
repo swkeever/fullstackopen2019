@@ -22,7 +22,7 @@ const NewBook = (props) => {
       variables: {
         title,
         published: intPublished,
-        author,
+        authorName: author,
         genres,
       }
     });

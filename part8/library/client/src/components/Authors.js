@@ -9,7 +9,7 @@ const Authors = (props) => {
   const [year, setYear] = useState('');
 
   useEffect(() => {
-    const initialName = authors ? authors[0].name : '';
+    const initialName = authors.length ? authors[0].name : '';
     setName(initialName);
   }, [authors]);
 

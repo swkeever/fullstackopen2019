@@ -6,16 +6,26 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./index.js",
-    "watch": "nodemon index.js"
+    "watch": "nodemon index.js",
+    "lint": "eslint .",
+    "lint:fix": "npm run lint --fix"
   },
   "author": "Sean Keever",
   "license": "MIT",
   "dependencies": {
     "apollo-server": "^2.6.9",
     "graphql": "^14.4.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.6.4",
+    "mongoose-unique-validator": "^2.0.3",
+    "react-apollo": "^3.0.0-beta.2",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "eslint": "^6.0.1",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-config-google": "^0.13.0",
+    "eslint-plugin-import": "^2.18.0",
     "nodemon": "^1.19.1"
   }
 }

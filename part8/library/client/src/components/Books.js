@@ -1,36 +1,44 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
+import _ from 'lodash';
+import FilteredBooks from './FilteredBooks';
+import { BooksContext } from '../App'
 
 const Books = (props) => {
-  if (!props.show || !props.books) {
+  const [filter, setFilter] = useState('');
+
+  const books = useContext(BooksContext);
+
+  console.log('bbb', books)
+
+  if (!props.show || !books) {
     return null;
   }
 
-  const { books } = props;
+  const showFilters = () => {
+    const allGenresWithDuplicates = [];
+
+    books.forEach((book) => {
+      const { genres } = book;
+
+      genres.forEach((genre) => {
+        allGenresWithDuplicates.push(genre);
+      });
+    });
+
+    const allGenres = _.uniq(allGenresWithDuplicates);
+
+    return allGenres.map(genre => (
+      <button key={`${genre}-filter-button`} type="button" onClick={() => setFilter(genre)}>{genre}</button>
+    )).concat(<button key="all-genres-button" type="button" onClick={() => setFilter('')}>All genres</button>);
+  };
 
   return (
     <div>
       <h2>books</h2>
-
-      <table>
-        <tbody>
-          <tr>
-            <th />
-            <th>
-              author
-            </th>
-            <th>
-              published
-            </th>
-          </tr>
-          {books.map(a => (
-            <tr key={a.id}>
-              <td>{a.title}</td>
-              <td>{a.author.name}</td>
-              <td>{a.published}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <FilteredBooks
+        filter={filter}
+      />
+      {showFilters()}
     </div>
   );
 };

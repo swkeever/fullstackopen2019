@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
+import { AuthorsContext } from '../App';
 
 const Authors = (props) => {
-  const { authors, show, editBorn } = props;
+  const { show, editBorn } = props;
 
   const [name, setName] = useState('');
   const [year, setYear] = useState('');
+
+  const authors = useContext(AuthorsContext);
 
   useEffect(() => {
     const initialName = authors.length ? authors[0].name : '';

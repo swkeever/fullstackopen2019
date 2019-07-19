@@ -6,6 +6,7 @@ import Authors from './components/Authors';
 import Books from './components/Books';
 import NewBook from './components/NewBook';
 import Login from './components/Login';
+import Recommend from './components/Recommend';
 
 
 const ALL_AUTHORS = gql`
@@ -28,6 +29,7 @@ const ALL_BOOKS = gql`
     }
     published
     id
+    genres
   }
 }
 `;
@@ -85,6 +87,20 @@ mutation login(
 }
 `;
 
+const ME = gql`
+{
+  me {
+    username
+    favoriteGenre
+    id
+  }
+}
+`;
+
+export const UserContext = React.createContext();
+export const AuthorsContext = React.createContext();
+export const BooksContext = React.createContext();
+
 const App = () => {
   const client = useApolloClient();
   const [page, setPage] = useState('authors');
@@ -93,6 +109,7 @@ const App = () => {
 
   const authorsData = useQuery(ALL_AUTHORS);
   const booksData = useQuery(ALL_BOOKS);
+  const userData = useQuery(ME);
 
   const handleError = (error) => {
     setErrorMessage(error.graphQLErrors[0] ? error.graphQLErrors[0].message : error.message);
@@ -128,6 +145,7 @@ const App = () => {
 
   const authors = _.isEmpty(authorsData.data.allAuthors) ? [] : authorsData.data.allAuthors;
   const books = _.isEmpty(booksData.data) ? [] : booksData.data.allBooks;
+  const user = _.isEmpty(userData.data) ? null : userData.data.me;
 
   return (
     <div>
@@ -136,25 +154,39 @@ const App = () => {
         <button type="button" onClick={() => setPage('authors')}>authors</button>
         <button type="button" onClick={() => setPage('books')}>books</button>
         {token && <button type="button" onClick={() => setPage('add')}>add book</button>}
+        {token && <button type="button" onClick={() => setPage('recommend')}>recommend</button>}
         {token && <button type="button" onClick={logout}>logout</button>}
         {!token && <button type="button" onClick={() => setPage('login')}>login</button>}
       </div>
 
-      <Authors
-        show={page === 'authors'}
-        authors={authors}
-        editBorn={editBorn}
-      />
+      <AuthorsContext.Provider value={authors}>
+        <Authors
+          show={page === 'authors'}
+          editBorn={editBorn}
+        />
+      </AuthorsContext.Provider>
 
-      <Books
-        show={page === 'books'}
-        books={books}
-      />
+
+      <BooksContext.Provider value={books}>
+        <Books
+          show={page === 'books'}
+        />
+      </BooksContext.Provider>
+
 
       <NewBook
         show={page === 'add'}
         addBook={addBook}
       />
+
+      <UserContext.Provider value={user}>
+        <BooksContext.Provider value={books}>
+          <Recommend
+            show={page === 'recommend'}
+          />
+        </BooksContext.Provider>
+      </UserContext.Provider>
+
 
       <Login show={page === 'login'} setPage={setPage} login={login} setToken={setToken} />
 

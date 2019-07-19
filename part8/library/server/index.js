@@ -106,8 +106,6 @@ const resolvers = {
         books = books.filter(b => b.genres.includes(args.genre));
       }
 
-      console.log('after', books);
-
       return books;
     },
     allAuthors: async () => {
@@ -163,9 +161,6 @@ const resolvers = {
           born: author.born,
           bookCount: author.bookCount ? author.bookCount + 1 : 1,
         };
-
-        console.log('updatedAuthor');
-        console.log(updatedAuthor)
 
         const savedAuthor = await Author.findByIdAndUpdate(author._id, updatedAuthor, { new: true });
 
@@ -243,8 +238,6 @@ const server = new ApolloServer({
       );
 
       const currentUser = await User.findById(decodedToken.id);
-
-      
 
       return { currentUser };
     }

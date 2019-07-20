@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { gql } from 'apollo-boost';
-import { useQuery } from '@apollo/react-hooks';
 import { AuthorsContext } from '../App';
 
 const Authors = (props) => {

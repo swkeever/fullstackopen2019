@@ -8,8 +8,6 @@ const Books = (props) => {
 
   const books = useContext(BooksContext);
 
-  console.log('bbb', books)
-
   if (!props.show || !books) {
     return null;
   }
@@ -36,7 +34,7 @@ const Books = (props) => {
     <div>
       <h2>books</h2>
       <FilteredBooks
-        filter={filter}
+        genre={filter}
       />
       {showFilters()}
     </div>

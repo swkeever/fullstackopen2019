@@ -1,6 +1,6 @@
-import React, { useContext } from 'react'
+import React, { useContext } from 'react';
 import FilteredBooks from './FilteredBooks';
-import { UserContext } from '../App'
+import { UserContext } from '../App';
 
 const Recommend = (props) => {
   const user = useContext(UserContext);
@@ -13,12 +13,13 @@ const Recommend = (props) => {
     <div>
       <h2>recommendations</h2>
       <p>
-        books in your favorite genre <strong>{user.favoriteGenre}</strong>
+        books in your favorite genre
+        {' '}
+        <strong>{user.favoriteGenre}</strong>
       </p>
-      <FilteredBooks filter={user.favoriteGenre} />
+      <FilteredBooks genre={user.favoriteGenre} />
     </div>
-  )
-  
-}
+  );
+};
 
 export default Recommend;

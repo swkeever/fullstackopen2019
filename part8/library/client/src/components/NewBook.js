@@ -18,20 +18,24 @@ const NewBook = (props) => {
 
     const intPublished = Number(published);
 
-    await addBook({
-      variables: {
-        title,
-        published: intPublished,
-        authorName: author,
-        genres,
-      }
-    });
+    try {
+      await addBook({
+        variables: {
+          title,
+          published: intPublished,
+          authorName: author,
+          genres,
+        },
+      });
 
-    setTitle('');
-    setPublished('');
-    setAuhtor('');
-    setGenres([]);
-    setGenre('');
+      setTitle('');
+      setPublished('');
+      setAuhtor('');
+      setGenres([]);
+      setGenre('');
+    } catch (error) {
+      console.error('oops!', error.message);
+    }
   };
 
   const addGenre = () => {

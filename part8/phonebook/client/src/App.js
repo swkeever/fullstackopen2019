@@ -1,23 +1,40 @@
 import React, { useState } from 'react';
 import { gql } from 'apollo-boost';
-import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks';
+import {
+  useQuery, useMutation, useApolloClient, useSubscription,
+} from '@apollo/react-hooks';
 import Persons from './components/Persons';
 import PersonForm from './components/PersonForm';
 import PhoneForm from './components/PhoneForm';
 import LoginForm from './components/LoginForm';
 
+const PERSON_DETAILS = gql`
+fragment PersonDetails on Person {
+  name
+  phone
+  address {
+    street
+    city
+  }
+}
+`;
+
 const ALL_PERSONS = gql`
 {  
   allPersons {
-    name
-    phone
-    address {
-      street
-      city
-    }
-    id
+    ...PersonDetails
   }
 }
+${PERSON_DETAILS}
+`;
+
+const PERSON_ADDED = gql`
+subscription {
+  personAdded {
+    ...PersonDetails
+  }
+}
+${PERSON_DETAILS}
 `;
 
 const CREATE_PERSON = gql`
@@ -67,7 +84,7 @@ const LOGIN = gql`
 
 const App = () => {
   const client = useApolloClient();
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(window.localStorage.getItem('phonenumbers-user-token'));
   const persons = useQuery(ALL_PERSONS);
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -84,6 +101,28 @@ const App = () => {
     client.resetStore();
   };
 
+  const updateCacheWith = (addedPerson) => {
+    const includedIn = (set, object) => set.map(p => p.id).includes(object.id);
+
+    const dataInStore = client.readQuery({ query: ALL_PERSONS });
+
+    if (!includedIn(dataInStore.allPersons, addedPerson)) {
+      dataInStore.allPersons.push(addedPerson);
+      client.writeQuery({
+        query: ALL_PERSONS,
+        data: dataInStore,
+      });
+    }
+  };
+
+  useSubscription(PERSON_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const addedPerson = subscriptionData.data.personAdded;
+      console.log(`${addedPerson.name} added`);
+      updateCacheWith(addedPerson);
+    },
+  });
+
   const [login] = useMutation(LOGIN, {
     onError: handleError,
   });
@@ -91,17 +130,7 @@ const App = () => {
   const [addPerson] = useMutation(CREATE_PERSON, {
     onError: handleError,
     update: (store, response) => {
-      console.log(store)
-      const dataInStore = store.readQuery({
-        query: ALL_PERSONS,
-      });
-
-      dataInStore.allPersons.push(response.data.addPerson);
-
-      store.writeQuery({
-        query: ALL_PERSONS,
-        data: dataInStore,
-      });
+      updateCacheWith(response.data.addPerson);
     },
   });
 

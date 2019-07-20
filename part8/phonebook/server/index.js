@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const Person = require('./models/person');
 const User = require('./models/user');
 const jwt = require('jsonwebtoken');
+const {PubSub} = require('apollo-server');
+const pubsub = new PubSub();
 
 mongoose.set('useFindAndModify', false);
 
@@ -25,6 +27,7 @@ const typeDefs = gql`
     name: String!
     phone: String
     address: Address!
+    friendOf: [User!]!
     id: ID!
   }
 
@@ -36,6 +39,10 @@ const typeDefs = gql`
 
   type Token {
     value: String!
+  }
+
+  type Subscription {
+    personAdded: Person!
   }
 
   enum YesNo {
@@ -76,14 +83,14 @@ const resolvers = {
     personCount: () => Person.collection.countDocuments(),
     allPersons: (root, args) => {
       if (!args.phone) {
-        return Person.find({});
+        return Person.find({}).populate('friendOf');
       }
 
       return Person.find({
         phone: {
           $exists: args.phone === 'YES',
         },
-      });
+      }).populate('friendOf');
     },
     findPerson: (root, args) => Person.findOne({name: args.name}),
     me: (root, args, context) => context.currentUser,
@@ -111,6 +118,8 @@ const resolvers = {
           invalidArgs: args,
         });
       }
+
+      pubsub.publish('PERSON_ADDED', {personAdded: person});
 
       return person;
     },
@@ -166,6 +175,11 @@ const resolvers = {
       return currentUser;
     },
   },
+  Subscription: {
+    personAdded: {
+      subscribe: () => pubsub.asyncIterator(['PERSON_ADDED']),
+    },
+  },
 };
 
 const server = new ApolloServer({
@@ -190,6 +204,7 @@ const server = new ApolloServer({
 
 server
     .listen()
-    .then(({url}) => {
+    .then(({url, subscriptionsUrl}) => {
       console.log(`Server ready at ${url}`);
+      console.log(`Subscriptions ready at ${subscriptionsUrl}`);
     });

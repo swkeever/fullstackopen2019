@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 import _ from 'lodash';
@@ -24,7 +24,6 @@ const FilteredBooks = ({ genre }) => {
     fetchPolicy: 'no-cache',
   });
 
-  console.log(booksData.data.allBooks);
   const books = booksData.data.allBooks;
 
   if (_.isEmpty(books)) {
